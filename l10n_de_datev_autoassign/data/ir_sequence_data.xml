@@ -5,11 +5,11 @@
             noupdate="1": Sequenz wird nur beim ersten Installieren angelegt.
             Manuelle Änderungen in der UI (Startnummer etc.) bleiben erhalten.
         -->
-        <record id="seq_datev_customer_identifier" model="ir.sequence">
+        <record id="seq_l10n_de_datev_identifier_customer" model="ir.sequence">
             <field name="name">DATEV Debitorennummer</field>
-            <field name="code">datev.customer.identifier</field>
-            <field name="prefix"></field>
-            <field name="suffix"></field>
+            <field name="code">l10n_de_datev_identifier_customer_sequence</field>
+            <field name="prefix"/>
+            <field name="suffix"/>
             <field name="padding">0</field>
             <field name="number_next">10000</field>
             <field name="number_increment">1</field>

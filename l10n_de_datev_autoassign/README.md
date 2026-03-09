@@ -6,11 +6,11 @@ Odoo-Modul zur automatischen Vergabe von DATEV-Debitorennummern beim Bestätigen
 
 Wenn eine Ausgangsrechnung bestätigt wird (`action_post`) und der zugehörige Kunde
 noch keine `l10n_de_datev_identifier_customer` besitzt, wird automatisch die nächste
-freie Nummer aus der Sequenz `datev.customer.identifier` vergeben.
+freie Nummer aus der Sequenz `l10n_de_datev_identifier_customer_sequence` vergeben.
 
 ## Voraussetzungen
 
-- Odoo 17.0
+- Odoo 19.0
 - Modul `account` (Buchhaltung)
 - Modul `l10n_de_reports` (Deutsche Lokalisierung / DATEV-Export)
 

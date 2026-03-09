@@ -5,36 +5,18 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='account']" position="after">
-                <h2>DATEV Auto-Zuweisung</h2>
-                <div class="row mt16 o_settings_container" id="datev_autoassign_settings">
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="datev_auto_assign_customer_identifier"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="datev_auto_assign_customer_identifier"/>
-                            <div class="text-muted">
-                                Beim Bestätigen einer Ausgangsrechnung wird dem Kunden
-                                automatisch eine DATEV-Debitorennummer zugewiesen,
-                                falls noch keine vorhanden ist.
-                            </div>
-                            <div
-                                class="content-group mt8"
-                                attrs="{'invisible': [('datev_auto_assign_customer_identifier', '=', False)]}">
-                                <div class="row">
-                                    <label
-                                        for="datev_customer_identifier_next"
-                                        class="col-lg-4 o_light_label"
-                                        string="Nächste Nummer"/>
-                                    <field
-                                        name="datev_customer_identifier_next"
-                                        class="col-lg-2"/>
-                                </div>
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="DATEV" name="datev_autoassign">
+                    <setting id="datev_autoassign_settings" help="Beim Bestätigen einer Ausgangsrechnung wird dem Kunden automatisch eine DATEV-Debitorennummer zugewiesen, falls noch keine vorhanden ist.">
+                        <field name="datev_auto_assign_customer_identifier"/>
+                        <div class="content-group" invisible="datev_auto_assign_customer_identifier != True">
+                            <div class="row">
+                                <label for="datev_customer_identifier_next" string="Next Number"/>
+                                <field name="datev_customer_identifier_next"/>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </setting>
+                </block>
             </xpath>
         </field>
     </record>
