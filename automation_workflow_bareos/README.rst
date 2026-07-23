@@ -11,19 +11,19 @@ Supported models
 
 The module ships with automated rules for the following models:
 
-+------------------+--------------------+---------------+
-| Model            | Responsible field  | Cardinality   |
-+==================+====================+===============+
-| ``crm.lead``     | ``user_id``        | single user   |
-+------------------+--------------------+---------------+
-| ``sale.order``   | ``user_id``        | single user   |
-+------------------+--------------------+---------------+
-| ``purchase.order``| ``user_id``       | single user   |
-+------------------+--------------------+---------------+
-| ``account.move`` | ``invoice_user_id``| single user   |
-+------------------+--------------------+---------------+
-| ``project.task`` | ``user_ids``       | first of M2M  |
-+------------------+--------------------+---------------+
++--------------------+--------------------+---------------+
+| Model              | Responsible field  | Cardinality   |
++====================+====================+===============+
+| ``crm.lead``       | ``user_id``        | single user   |
++--------------------+--------------------+---------------+
+| ``sale.order``     | ``user_id``        | single user   |
++--------------------+--------------------+---------------+
+| ``purchase.order`` | ``user_id``        | single user   |
++--------------------+--------------------+---------------+
+| ``account.move``   | ``invoice_user_id``| single user   |
++--------------------+--------------------+---------------+
+| ``project.task``   | ``user_ids``       | first of M2M  |
++--------------------+--------------------+---------------+
 
 How it works
 ============
@@ -74,10 +74,10 @@ What you typically want to tweak:
 The server action calls ``_schedule_incoming_message_activity`` with these
 customizable keyword arguments (all have sensible defaults):
 
-- **``summary``** — activity summary text (default ``"react to message"``)
-- **``activity_type_xmlid``** — XML ID of the activity type
+- ``summary`` — activity summary text (default ``"react to message"``)
+- ``activity_type_xmlid`` — XML ID of the activity type
   (default ``"mail.mail_activity_data_todo"``)
-- **``user_field``** — relational field holding the responsible user(s)
+- ``user_field`` — relational field holding the responsible user(s)
   (default ``"user_id"``)
 
 For example, to use a different activity type::
