@@ -71,6 +71,12 @@ class TestIncomingActivity(TransactionCase):
                 "user_ids": [(6, 0, [cls.user1.id, cls.user2.id])],
             }
         )
+        cls.contact = cls.env["res.partner"].create(
+            {
+                "name": "Test Contact",
+                "user_id": cls.user1.id,
+            }
+        )
 
     def _assert_activity(self, record, note_start, exists=True):
         domain = [
@@ -112,6 +118,10 @@ class TestIncomingActivity(TransactionCase):
     def test_project_task(self):
         self.task._schedule_incoming_message_activity(user_field="user_ids")
         self._assert_activity(self.task, "<p>2")
+
+    def test_res_partner(self):
+        self.contact._schedule_incoming_message_activity()
+        self._assert_activity(self.contact, "<p>2")
 
     def test_dedup(self):
         self.lead._schedule_incoming_message_activity()

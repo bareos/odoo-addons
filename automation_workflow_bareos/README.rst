@@ -14,6 +14,8 @@ The module ships with automated rules for the following models:
 +--------------------+--------------------+---------------+
 | Model              | Responsible field  | Cardinality   |
 +====================+====================+===============+
+| ``res.partner``    | ``user_id``        | single user   |
++--------------------+--------------------+---------------+
 | ``crm.lead``       | ``user_id``        | single user   |
 +--------------------+--------------------+---------------+
 | ``sale.order``     | ``user_id``        | single user   |

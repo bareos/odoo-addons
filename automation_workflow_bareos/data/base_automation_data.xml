@@ -82,6 +82,24 @@
         </record>
 
         <!-- ============================================================ -->
+        <!-- Contact (res.partner)                                        -->
+        <!-- ============================================================ -->
+        <record id="automation_incoming_activity_res_partner" model="base.automation">
+            <field name="name">Incoming Message Activity (Contact)</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="trigger">on_message_received</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="action_incoming_activity_res_partner" model="ir.actions.server">
+            <field name="name">Create Activity on Incoming Message (Contact)</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">record._schedule_incoming_message_activity(user_field="user_id")</field>
+            <field name="base_automation_id" ref="automation_incoming_activity_res_partner"/>
+        </record>
+
+        <!-- ============================================================ -->
         <!-- Project Task                                                -->
         <!-- ============================================================ -->
         <record id="automation_incoming_activity_project_task" model="base.automation">
