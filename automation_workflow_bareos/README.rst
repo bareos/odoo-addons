@@ -18,12 +18,14 @@ The module ships with automated rules for the following models:
 +--------------------+--------------------+---------------+
 | ``sale.order``     | ``user_id``        | single user   |
 +--------------------+--------------------+---------------+
-| ``purchase.order`` | ``user_id``        | single user   |
-+--------------------+--------------------+---------------+
 | ``account.move``   | ``invoice_user_id``| single user   |
 +--------------------+--------------------+---------------+
 | ``project.task``   | ``user_ids``       | first of M2M  |
 +--------------------+--------------------+---------------+
+
+A commented-out rule for ``purchase.order`` ships in
+``data/base_automation_data.xml``; enabling it requires adding
+``purchase`` to the module dependencies.
 
 How it works
 ============
