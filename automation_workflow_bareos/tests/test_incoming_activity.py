@@ -39,26 +39,24 @@ class TestIncomingActivity(TransactionCase):
         )
         cls.sale_order = cls.env["sale.order"].create(
             {
-                "partner_id": cls.env["res.partner"]
-                .create({"name": "SO Partner"})
-                .id,
+                "partner_id": cls.env["res.partner"].create({"name": "SO Partner"}).id,
                 "user_id": cls.user1.id,
             }
         )
-        cls.purchase_order = cls.env["purchase.order"].create(
-            {
-                "partner_id": cls.env["res.partner"]
-                .create({"name": "PO Partner"})
-                .id,
-                "user_id": cls.user1.id,
-            }
-        )
+        # Requires the "purchase" module; see the commented block in
+        # data/base_automation_data.xml. Uncomment together with that block.
+        # cls.purchase_order = cls.env["purchase.order"].create(
+        #     {
+        #         "partner_id": cls.env["res.partner"]
+        #         .create({"name": "PO Partner"})
+        #         .id,
+        #         "user_id": cls.user1.id,
+        #     }
+        # )
         cls.account_move = cls.env["account.move"].create(
             {
                 "move_type": "entry",
-                "partner_id": cls.env["res.partner"]
-                .create({"name": "AM Partner"})
-                .id,
+                "partner_id": cls.env["res.partner"].create({"name": "AM Partner"}).id,
                 "invoice_user_id": cls.user1.id,
                 "journal_id": cls.env["account.journal"]
                 .create({"name": "Test Journal", "type": "general"})
@@ -99,9 +97,11 @@ class TestIncomingActivity(TransactionCase):
         self.sale_order._schedule_incoming_message_activity()
         self._assert_activity(self.sale_order, "<p>2")
 
-    def test_purchase_order(self):
-        self.purchase_order._schedule_incoming_message_activity()
-        self._assert_activity(self.purchase_order, "<p>2")
+    # Requires the "purchase" module; see the commented block in
+    # data/base_automation_data.xml.
+    # def test_purchase_order(self):
+    #     self.purchase_order._schedule_incoming_message_activity()
+    #     self._assert_activity(self.purchase_order, "<p>2")
 
     def test_account_move(self):
         self.account_move._schedule_incoming_message_activity(
@@ -206,7 +206,8 @@ class TestIncomingActivity(TransactionCase):
         so_no_user = self.env["sale.order"].create(
             {
                 "partner_id": self.env["res.partner"]
-                .create({"name": "SO No User Partner"}).id,
+                .create({"name": "SO No User Partner"})
+                .id,
                 "user_id": False,
             }
         )

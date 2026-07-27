@@ -38,9 +38,15 @@
             <field name="base_automation_id" ref="automation_incoming_activity_sale_order"/>
         </record>
 
-        <!-- ============================================================ -->
-        <!-- Purchase Order                                              -->
-        <!-- ============================================================ -->
+        <!--
+        ============================================================
+        Purchase Order (DISABLED)
+        ============================================================
+        This rule requires the "purchase" module in depends.
+        Commented out because the Purchase app is not used.
+        To re-enable: add "purchase" to depends in __manifest__.py
+        and uncomment the records below.
+
         <record id="automation_incoming_activity_purchase_order" model="base.automation">
             <field name="name">Incoming Message Activity (Purchase Order)</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -55,6 +61,7 @@
             <field name="code">record._schedule_incoming_message_activity(user_field="user_id")</field>
             <field name="base_automation_id" ref="automation_incoming_activity_purchase_order"/>
         </record>
+        -->
 
         <!-- ============================================================ -->
         <!-- Account Move (Invoice)                                      -->
