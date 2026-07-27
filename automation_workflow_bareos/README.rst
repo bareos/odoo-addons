@@ -22,12 +22,17 @@ The module ships with automated rules for the following models:
 +--------------------+--------------------+---------------+
 | ``account.move``   | ``invoice_user_id``| single user   |
 +--------------------+--------------------+---------------+
+| ``project.project``| ``user_id``        | single user   |
++--------------------+--------------------+---------------+
 | ``project.task``   | ``user_ids``       | first of M2M  |
 +--------------------+--------------------+---------------+
+| ``project.update`` | ``user_id``        | single user   |
++--------------------+--------------------+---------------+
 
-A commented-out rule for ``purchase.order`` ships in
-``data/base_automation_data.xml``; enabling it requires adding
-``purchase`` to the module dependencies.
+Commented-out rules for ``purchase.order`` (requires ``purchase``) and
+``sign.request`` (requires ``sign``, Odoo Enterprise) ship in
+``data/base_automation_data.xml``; enabling either requires adding the
+respective module to the dependencies and uncommenting the block.
 
 How it works
 ============

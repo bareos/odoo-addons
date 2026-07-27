@@ -63,12 +63,25 @@ class TestIncomingActivity(TransactionCase):
                 .id,
             }
         )
-        cls.project = cls.env["project.project"].create({"name": "Test Project"})
+        cls.project = cls.env["project.project"].create(
+            {
+                "name": "Test Project",
+                "user_id": cls.user1.id,
+            }
+        )
         cls.task = cls.env["project.task"].create(
             {
                 "name": "Test Task",
                 "project_id": cls.project.id,
                 "user_ids": [(6, 0, [cls.user1.id, cls.user2.id])],
+            }
+        )
+        cls.project_update = cls.env["project.update"].create(
+            {
+                "name": "Test Update",
+                "project_id": cls.project.id,
+                "user_id": cls.user1.id,
+                "status": "on_track",
             }
         )
         cls.contact = cls.env["res.partner"].create(
@@ -118,6 +131,14 @@ class TestIncomingActivity(TransactionCase):
     def test_project_task(self):
         self.task._schedule_incoming_message_activity(user_field="user_ids")
         self._assert_activity(self.task, "<p>2")
+
+    def test_project_project(self):
+        self.project._schedule_incoming_message_activity()
+        self._assert_activity(self.project, "<p>2")
+
+    def test_project_update(self):
+        self.project_update._schedule_incoming_message_activity()
+        self._assert_activity(self.project_update, "<p>2")
 
     def test_res_partner(self):
         self.contact._schedule_incoming_message_activity()
