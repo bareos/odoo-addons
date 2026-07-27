@@ -144,6 +144,30 @@ class TestIncomingActivity(TransactionCase):
         self.contact._schedule_incoming_message_activity()
         self._assert_activity(self.contact, "<p>2")
 
+    def test_res_partner_end_to_end_installed_rule(self):
+        """Exercise the installed automation rule (not the mixin directly).
+
+        Verifies the trigger/action wiring of the shipped XML data and
+        that the activity is assigned to the responsible user.
+        """
+        self.contact.message_post(
+            body="Test message from portal user",
+            author_id=self.partner_portal.id,
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        self._assert_activity(self.contact, "<p>2")
+        activity = self.env["mail.activity"].search(
+            [
+                ("res_model", "=", "res.partner"),
+                ("res_id", "=", self.contact.id),
+                ("activity_type_id", "=", self.activity_todo.id),
+                ("summary", "=", "react to message"),
+            ]
+        )
+        self.assertEqual(len(activity), 1)
+        self.assertEqual(activity.user_id, self.user1)
+
     def test_dedup(self):
         self.lead._schedule_incoming_message_activity()
         self._assert_activity(self.lead, "<p>2")
