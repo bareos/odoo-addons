@@ -39,10 +39,10 @@ class ResConfigSettings(models.TransientModel):
                 [("code", "=", "l10n_de_datev_identifier_customer_sequence")], limit=1
             )
         )
-        next_sequence_number = sequence.number_next_actual or 0
+        next_sequence_number = sequence.number_next_actual if sequence else 0
         _logger.debug(
-            "datev_customer_identifier_next next_sequence_number=%s",
-            next_sequence_number,
+            "datev_customer_identifier_next next_sequence_number=%s"
+            % next_sequence_number
         )
         partner = self.env["res.partner"].search(
             [("l10n_de_datev_identifier_customer", "!=", False)],
@@ -50,7 +50,7 @@ class ResConfigSettings(models.TransientModel):
             limit=1,
         )
         max_l10n_de_datev_identifier_customer = (
-            partner.l10n_de_datev_identifier_customer or 0
+            partner.l10n_de_datev_identifier_customer if partner else 0
         )
         _logger.debug(
             "datev_customer_identifier_next l10n_de_datev_identifier_customer=%s"
@@ -61,12 +61,13 @@ class ResConfigSettings(models.TransientModel):
             next_sequence_number, max_l10n_de_datev_identifier_customer + 1
         )
         _logger.debug(
-            "datev_customer_identifier_next=%s", res["datev_customer_identifier_next"]
+            "datev_customer_identifier_next=%s" % res["datev_customer_identifier_next"]
         )
 
         return res
 
     def set_values(self):
+        """Write the next DATEV customer identifier to the sequence."""
         super().set_values()
 
         # Nächste Sequenznummer schreiben wenn geändert
