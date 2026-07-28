@@ -58,6 +58,14 @@ class AccountMove(models.Model):
                 partner = move.partner_id.commercial_partner_id
                 if not partner.l10n_de_datev_identifier_customer:
                     next_id = self._get_next_l10n_de_datev_identifier_customer()
+                    while (
+                        self.env["res.partner"]
+                        .sudo()
+                        .search_count(
+                            [("l10n_de_datev_identifier_customer", "=", next_id)]
+                        )
+                    ):
+                        next_id = self._get_next_l10n_de_datev_identifier_customer()
                     partner.sudo().write({"l10n_de_datev_identifier_customer": next_id})
                     _logger.info(
                         "Auto-assign DateV Customer number %s "

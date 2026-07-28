@@ -1,6 +1,7 @@
 import logging
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -31,7 +32,6 @@ class ResConfigSettings(models.TransientModel):
         """
         res = super().get_values()
 
-        # Nächste Sequenznummer auslesen
         sequence = (
             self.env["ir.sequence"]
             .sudo()
@@ -44,10 +44,14 @@ class ResConfigSettings(models.TransientModel):
             "datev_customer_identifier_next next_sequence_number=%s"
             % next_sequence_number
         )
-        partner = self.env["res.partner"].search(
-            [("l10n_de_datev_identifier_customer", "!=", False)],
-            order="l10n_de_datev_identifier_customer desc",
-            limit=1,
+        partner = (
+            self.env["res.partner"]
+            .sudo()
+            .search(
+                [("l10n_de_datev_identifier_customer", "!=", False)],
+                order="l10n_de_datev_identifier_customer desc",
+                limit=1,
+            )
         )
         max_l10n_de_datev_identifier_customer = (
             partner.l10n_de_datev_identifier_customer if partner else 0
@@ -70,7 +74,30 @@ class ResConfigSettings(models.TransientModel):
         """Write the next DATEV customer identifier to the sequence."""
         super().set_values()
 
-        # Nächste Sequenznummer schreiben wenn geändert
+        if not self.datev_customer_identifier_next:
+            return
+
+        max_partner = (
+            self.env["res.partner"]
+            .sudo()
+            .search(
+                [("l10n_de_datev_identifier_customer", "!=", False)],
+                order="l10n_de_datev_identifier_customer desc",
+                limit=1,
+            )
+        )
+        max_identifier = (
+            max_partner.l10n_de_datev_identifier_customer if max_partner else 0
+        )
+        if self.datev_customer_identifier_next <= max_identifier:
+            raise UserError(
+                _(
+                    "Die nächste DATEV-Debitorennummer (%s) muss größer sein "
+                    "als die höchste bereits vergebene Nummer (%s)."
+                )
+                % (self.datev_customer_identifier_next, max_identifier)
+            )
+
         sequence = (
             self.env["ir.sequence"]
             .sudo()
@@ -78,5 +105,5 @@ class ResConfigSettings(models.TransientModel):
                 [("code", "=", "l10n_de_datev_identifier_customer_sequence")], limit=1
             )
         )
-        if sequence and self.datev_customer_identifier_next:
+        if sequence:
             sequence.sudo().write({"number_next": self.datev_customer_identifier_next})
