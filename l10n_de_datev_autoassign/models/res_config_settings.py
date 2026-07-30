@@ -25,6 +25,25 @@ class ResConfigSettings(models.TransientModel):
         help="Zeigt und setzt die nächste Nummer der DATEV-Debitorensequenz.",
     )
 
+    def _get_datev_sequence(self):
+        """Return the company-specific sequence or fall back to the global one."""
+        code = "l10n_de_datev_identifier_customer_sequence"
+        seq = (
+            self.env["ir.sequence"]
+            .sudo()
+            .search(
+                [("code", "=", code), ("company_id", "=", self.env.company.id)],
+                limit=1,
+            )
+        )
+        if not seq:
+            seq = (
+                self.env["ir.sequence"]
+                .sudo()
+                .search([("code", "=", code), ("company_id", "=", False)], limit=1)
+            )
+        return seq
+
     @api.model
     def get_values(self):
         """Get maximum from next sequence number
@@ -32,13 +51,7 @@ class ResConfigSettings(models.TransientModel):
         """
         res = super().get_values()
 
-        sequence = (
-            self.env["ir.sequence"]
-            .sudo()
-            .search(
-                [("code", "=", "l10n_de_datev_identifier_customer_sequence")], limit=1
-            )
-        )
+        sequence = self._get_datev_sequence()
         next_sequence_number = sequence.number_next_actual if sequence else 0
         _logger.debug(
             "datev_customer_identifier_next next_sequence_number=%s"
@@ -98,12 +111,6 @@ class ResConfigSettings(models.TransientModel):
                 % (self.datev_customer_identifier_next, max_identifier)
             )
 
-        sequence = (
-            self.env["ir.sequence"]
-            .sudo()
-            .search(
-                [("code", "=", "l10n_de_datev_identifier_customer_sequence")], limit=1
-            )
-        )
+        sequence = self._get_datev_sequence()
         if sequence:
             sequence.sudo().write({"number_next": self.datev_customer_identifier_next})

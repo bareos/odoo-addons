@@ -43,4 +43,3 @@ Die Sequenz kann auch direkt unter
 - Bereits gesetzte Nummern werden **nicht** überschrieben.
 - Die Zuweisung erfolgt mit `sudo()`, da Buchhalter i.d.R. keinen Schreibzugriff
   auf `res.partner` haben.
-- Die Aktion wird im Server-Log protokolliert (Level: INFO).

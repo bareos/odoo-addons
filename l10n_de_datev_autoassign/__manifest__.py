@@ -18,6 +18,7 @@
         "data/ir_sequence_data.xml",
         "views/res_config_settings_views.xml",
     ],
+    "post_init_hook": "_post_init_hook",
     "installable": True,
     "auto_install": False,
     "application": False,
