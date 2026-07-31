@@ -112,5 +112,13 @@ class ResConfigSettings(models.TransientModel):
             )
 
         sequence = self._get_datev_sequence()
-        if sequence:
-            sequence.sudo().write({"number_next": self.datev_customer_identifier_next})
+        if not sequence:
+            raise UserError(
+                _(
+                    "Die Sequenz '%s' wurde nicht gefunden. "
+                    "Bitte prüfen Sie die Modulinstallation oder legen Sie die Sequenz "
+                    "unter Einstellungen → Technisch → Sequenzen manuell an."
+                )
+                % "l10n_de_datev_identifier_customer_sequence"
+            )
+        sequence.sudo().write({"number_next": self.datev_customer_identifier_next})
