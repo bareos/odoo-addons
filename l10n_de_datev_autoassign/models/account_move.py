@@ -1,5 +1,6 @@
 import logging
-from odoo import models, api, _
+
+from odoo import _, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -11,7 +12,8 @@ class AccountMove(models.Model):
     def _get_next_l10n_de_datev_identifier_customer(self, company=None):
         """
         Liefert die nächste freie DATEV-Debitorennummer via ir.sequence.
-        Gibt einen Integer zurück, da l10n_de_datev_identifier_customer ein Integer-Feld ist.
+        Gibt einen Integer zurück, da l10n_de_datev_identifier_customer ein
+        Integer-Feld ist.
         """
         sequence_code = "l10n_de_datev_identifier_customer_sequence"
         seq = self.env["ir.sequence"]
@@ -31,14 +33,15 @@ class AccountMove(models.Model):
 
         try:
             return int(next_val)
-        except (ValueError, TypeError):
+        except (ValueError, TypeError) as err:
             raise UserError(
                 _(
                     "Die Sequenz '%s' hat einen ungültigen Wert zurückgegeben: %s. "
-                    "Bitte stellen Sie sicher, dass kein Prefix/Suffix konfiguriert ist."
+                    "Bitte stellen Sie sicher, dass kein Prefix/Suffix "
+                    "konfiguriert ist."
                 )
                 % (sequence_code, next_val)
-            )
+            ) from err
 
     def action_post(self):
         """

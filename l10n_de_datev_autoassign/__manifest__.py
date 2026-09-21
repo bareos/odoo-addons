@@ -1,7 +1,7 @@
 {
     "name": "Germany - Accounting - auto create datev_identifier_customer",
     "version": "19.0.1.0.2",
-    "summary": "Setzt l10n_de_datev_identifier_customer automatisch beim Bestätigen einer Rechnung.",
+    "summary": "Setzt l10n_de_datev_identifier_customer automatisch beim Bestätigen.",
     "description": """
         Weist Kunden ohne DATEV-Debitorennummer beim Bestätigen einer Ausgangsrechnung
         automatisch die nächste freie Nummer aus der konfigurierbaren ir.sequence zu.

@@ -1,6 +1,6 @@
 import logging
 
-from odoo import models, fields, api, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -14,7 +14,8 @@ class ResConfigSettings(models.TransientModel):
         string="DATEV-Debitorennummer automatisch vergeben",
         help=(
             "Wenn aktiv, wird beim Bestätigen einer Ausgangsrechnung dem Kunden "
-            "automatisch eine DATEV-Debitorennummer zugewiesen, falls noch keine gesetzt ist."
+            "automatisch eine DATEV-Debitorennummer zugewiesen, falls noch keine "
+            "gesetzt ist."
         ),
         config_parameter="l10n_de_datev_autoassign.auto_assign_customer_identifier",
     )
@@ -54,8 +55,8 @@ class ResConfigSettings(models.TransientModel):
         sequence = self._get_datev_sequence()
         next_sequence_number = sequence.number_next_actual if sequence else 0
         _logger.debug(
-            "datev_customer_identifier_next next_sequence_number=%s"
-            % next_sequence_number
+            "datev_customer_identifier_next next_sequence_number=%s",
+            next_sequence_number,
         )
         partner = (
             self.env["res.partner"]
@@ -70,15 +71,16 @@ class ResConfigSettings(models.TransientModel):
             partner.l10n_de_datev_identifier_customer if partner else 0
         )
         _logger.debug(
-            "datev_customer_identifier_next l10n_de_datev_identifier_customer=%s"
-            % max_l10n_de_datev_identifier_customer
+            "datev_customer_identifier_next l10n_de_datev_identifier_customer=%s",
+            max_l10n_de_datev_identifier_customer,
         )
 
         res["datev_customer_identifier_next"] = max(
             next_sequence_number, max_l10n_de_datev_identifier_customer + 1
         )
         _logger.debug(
-            "datev_customer_identifier_next=%s" % res["datev_customer_identifier_next"]
+            "datev_customer_identifier_next=%s",
+            res["datev_customer_identifier_next"],
         )
 
         return res
