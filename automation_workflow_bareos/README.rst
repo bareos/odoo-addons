@@ -89,6 +89,7 @@ For example, to use a different activity type::
         activity_type_xmlid="my_module.my_activity_type",
         summary="Please follow up",
     )
+
 - **Only specific records** --- set a *Filter Domain* on the automation,
   e.g. ``[("stage_id", "=", ref("psc_stage_lead"))]`` to fire only on
   leads in a given stage

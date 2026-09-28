@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Real window action behind the report. The menu opens the server
+         action (its domain needs the company's deferred revenue account and
+         the extra-domain hook), but the returned action dict carries the id
+         of this record: "Add to my dashboard" in the cog menu requires a
+         genuine ir.actions.act_window. The saved dashboard block replays the
+         domain captured at add time, so the dynamic conditions are kept. -->
+    <record id="action_window_deferred_revenue_graph" model="ir.actions.act_window">
+        <field name="name">Deferred Revenue (provisions)</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">graph,list,pivot</field>
+        <!-- (5, 0, 0) first: the commands re-run on every module upgrade,
+             and without deleting the existing rows first the unique
+             constraint per (action, view_mode) is violated. -->
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'sequence': 1, 'view_mode': 'graph', 'view_id': ref('view_account_move_line_deferred_revenue_provisions_graph')}),
+            (0, 0, {'sequence': 2, 'view_mode': 'list', 'view_id': ref('view_account_move_line_deferred_revenue_list')}),
+            (0, 0, {'sequence': 3, 'view_mode': 'pivot', 'view_id': ref('view_account_move_line_deferred_revenue_pivot')}),
+        ]"/>
+        <field name="search_view_id" ref="view_account_move_line_deferred_revenue_search"/>
+        <field name="domain">[("move_id.deferred_original_move_ids", "!=", False), ("parent_state", "!=", "cancel")]</field>
+    </record>
+
+    <record id="action_server_deferred_revenue_graph" model="ir.actions.server">
+        <field name="name">Deferred Revenue (provisions)</field>
+        <field name="model_id" ref="account.model_account_move_line"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_deferred_revenue_graph()</field>
+    </record>
+
+    <!-- Second rendering of the by-month report: the amounts booked back
+         (debit) per month. One action can only bind one graph view, so the
+         two renderings get separate window actions and menus. -->
+    <record id="action_window_deferred_revenue_graph_recognized" model="ir.actions.act_window">
+        <field name="name">Deferred Revenue (recognized)</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">graph,list,pivot</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'sequence': 1, 'view_mode': 'graph', 'view_id': ref('view_account_move_line_deferred_revenue_graph')}),
+            (0, 0, {'sequence': 2, 'view_mode': 'list', 'view_id': ref('view_account_move_line_deferred_revenue_list')}),
+            (0, 0, {'sequence': 3, 'view_mode': 'pivot', 'view_id': ref('view_account_move_line_deferred_revenue_pivot')}),
+        ]"/>
+        <field name="search_view_id" ref="view_account_move_line_deferred_revenue_search"/>
+        <field name="domain">[("move_id.deferred_original_move_ids", "!=", False), ("parent_state", "!=", "cancel")]</field>
+    </record>
+
+    <record id="action_server_deferred_revenue_graph_recognized" model="ir.actions.server">
+        <field name="name">Deferred Revenue (recognized)</field>
+        <field name="model_id" ref="account.model_account_move_line"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_deferred_revenue_graph(graph='recognized')</field>
+    </record>
+
+    <menuitem
+        id="menu_deferred_revenue_graph"
+        name="Deferred Revenue (provisions)"
+        parent="account_reports.account_audit_regularization_entries_menu"
+        action="action_server_deferred_revenue_graph"
+        sequence="40"
+        groups="account.group_account_readonly"/>
+
+    <menuitem
+        id="menu_deferred_revenue_graph_recognized"
+        name="Deferred Revenue (recognized)"
+        parent="account_reports.account_audit_regularization_entries_menu"
+        action="action_server_deferred_revenue_graph_recognized"
+        sequence="41"
+        groups="account.group_account_readonly"/>
+
+</odoo>

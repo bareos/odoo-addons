@@ -52,8 +52,7 @@ class ResPartner(models.Model):
     potential_contact_count = fields.Integer(
         string="Potential Contacts",
         compute="_compute_potential_contact_count",
-        help="Number of unassigned contacts whose email domain matches this "
-        "company.",
+        help="Number of unassigned contacts whose email domain matches this company.",
     )
 
     ### DOMAIN HELPERS

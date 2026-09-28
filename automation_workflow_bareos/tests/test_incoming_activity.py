@@ -229,7 +229,9 @@ class TestIncomingActivity(TransactionCase):
                 "name": "Create Activity on Incoming Message (CRM Lead)",
                 "model_id": model.id,
                 "state": "code",
-                "code": "record._schedule_incoming_message_activity(user_field='user_id')",
+                "code": (
+                    "record._schedule_incoming_message_activity(user_field='user_id')"
+                ),
                 "base_automation_id": automation.id,
             }
         )
@@ -258,7 +260,9 @@ class TestIncomingActivity(TransactionCase):
                 "name": "Create Activity on Incoming Message (CRM Lead)",
                 "model_id": model.id,
                 "state": "code",
-                "code": "record._schedule_incoming_message_activity(user_field='user_id')",
+                "code": (
+                    "record._schedule_incoming_message_activity(user_field='user_id')"
+                ),
                 "base_automation_id": automation.id,
             }
         )
