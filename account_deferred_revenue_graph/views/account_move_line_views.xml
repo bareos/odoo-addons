@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_move_line_deferred_revenue_graph" model="ir.ui.view">
+        <field name="name">account.move.line.deferred.revenue.graph</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <graph string="Deferred Revenue (recognized)" type="line" stacked="True">
+                <field name="date" type="row" interval="month"/>
+                <field name="product_id"/>
+                <field name="debit" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_account_move_line_deferred_revenue_provisions_graph" model="ir.ui.view">
+        <field name="name">account.move.line.deferred.revenue.provisions.graph</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <graph string="Provisions" type="line" stacked="True" cumulated="True" cumulated_start="True">
+                <field name="date" type="row" interval="month"/>
+                <field name="product_id"/>
+                <field name="balance" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_account_move_line_deferred_revenue_pivot" model="ir.ui.view">
+        <field name="name">account.move.line.deferred.revenue.pivot</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Deferred Revenue (provisions)">
+                <field name="date" type="row" interval="month"/>
+                <!-- unfold products
+                <field name="product_category_id" type="row" optional="true"/>
+                <field name="product_id" type="row" optional="true"/>
+                -->
+                <field name="debit" type="measure"/>
+                <field name="credit" type="measure"/>
+                <field name="balance" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_account_move_line_deferred_revenue_list" model="ir.ui.view">
+        <field name="name">account.move.line.deferred.revenue.list</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <list string="Deferred Revenue Journal Entries">
+                <field name="date"/>
+                <field name="move_id"/>
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="partner_id"/>
+                <field name="debit"/>
+                <field name="credit"/>
+                <field name="balance"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_move_line_deferred_revenue_search" model="ir.ui.view">
+        <field name="name">account.move.line.deferred.revenue.search</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <search string="Deferred Revenue">
+                <field name="date"/>
+                <field name="product_category_id"/>
+                <field name="product_id"/>
+                <separator/>
+                <filter string="Date Period" name="date_filter" date="date"/>
+                <separator/>
+                <group>
+                    <filter
+                        string="Date"
+                        name="group_time"
+                        domain="[]"
+                        context="{'group_by': 'date:month'}"/>
+                    <filter
+                        string="Product Category"
+                        name="group_product_category"
+                        domain="[]"
+                        context="{'group_by': 'product_category_id'}"/>
+                    <filter
+                        string="Product"
+                        name="group_product"
+                        domain="[]"
+                        context="{'group_by': 'product_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>
