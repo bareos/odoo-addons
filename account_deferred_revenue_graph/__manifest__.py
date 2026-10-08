@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     "name": "Deferred Revenue by Month (Graph)",
-    "version": "19.0.1.0.15",
+    "version": "19.0.1.0.16",
     "summary": "Deferred revenue reports based on the actual journal entries",
     "author": "Bareos GmbH & Co. KG",
     "website": "https://www.bareos.com",
