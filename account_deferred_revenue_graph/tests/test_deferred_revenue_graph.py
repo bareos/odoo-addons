@@ -272,3 +272,39 @@ class TestDeferredRevenueGraph(AccountTestInvoicingCommon):
             self.env["account.move.line"]._get_deferred_revenue_graph_extra_domain(),
             [],
         )
+
+    def test_server_actions_runnable_by_readonly_accounting_user(self):
+        """A read-only accounting user must be able to open both reports.
+
+        The menus are visible to ``account.group_account_readonly``; the
+        server actions they trigger must carry the same group, otherwise
+        ``ir.actions.server.run()`` falls back to a write-access check on
+        ``account.move.line`` and raises an AccessError for read-only users.
+        """
+        self._create_deferred_invoice()
+        user = self.env["res.users"].create(
+            {
+                "name": "Readonly Deferred Graph",
+                "login": "readonly_deferred_graph",
+                "group_ids": [
+                    Command.set(
+                        [
+                            self.env.ref("base.group_user").id,
+                            self.env.ref("account.group_account_readonly").id,
+                        ]
+                    )
+                ],
+            }
+        )
+        for xmlid in (
+            "action_server_deferred_revenue_graph",
+            "action_server_deferred_revenue_graph_recognized",
+        ):
+            server_action = self.env.ref(f"account_deferred_revenue_graph.{xmlid}")
+            action = server_action.with_user(user).run()
+            self.assertEqual(action["res_model"], "account.move.line")
+            self.assertTrue(
+                self.env["account.move.line"]
+                .with_user(user)
+                .search_count(action["domain"])
+            )

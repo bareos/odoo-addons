@@ -29,6 +29,13 @@
         <field name="model_id" ref="account.model_account_move_line"/>
         <field name="state">code</field>
         <field name="code">action = model.action_deferred_revenue_graph()</field>
+        <!-- Restrict the server action to the same group as the menu:
+             ir.actions.server.run() falls back to a write-access check on
+             the action's model (base/models/ir_actions.py
+             _can_execute_action_on_records) when no group is set, which
+             Accounting read-only users fail. With a group the membership
+             check is used instead. -->
+        <field name="group_ids" eval="[(4, ref('account.group_account_readonly'))]"/>
     </record>
 
     <!-- Second rendering of the by-month report: the amounts booked back
@@ -53,6 +60,9 @@
         <field name="model_id" ref="account.model_account_move_line"/>
         <field name="state">code</field>
         <field name="code">action = model.action_deferred_revenue_graph(graph='recognized')</field>
+        <!-- See action_server_deferred_revenue_graph: the group avoids the
+             write-access fallback for Accounting read-only users. -->
+        <field name="group_ids" eval="[(4, ref('account.group_account_readonly'))]"/>
     </record>
 
     <menuitem
